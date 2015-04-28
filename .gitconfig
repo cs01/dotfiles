@@ -1,0 +1,38 @@
+[color]
+    diff = auto
+    branch = auto
+    status = auto
+
+[diff]
+    tool = $HOME/devbootstrap/.git-diff.sh
+    guitool = $HOME/devbootstrap/.git-diff.sh
+    external = $HOME/devbootstrap/.git-diff.sh
+
+[merge]
+    tool = mymeld
+
+[mergetool "mymeld"]
+    cmd = $HOME/devbootstrap/.git-merge.sh $BASE $LOCAL $REMOTE $MERGED
+
+[push]
+    default = matching
+
+[alias]
+    co = checkout
+    sf = submodule foreach
+    # what branch am I on? (mainly used for sbranch)
+    cbranch = !"echo '\\033[32m\t\\c' ; git branch |  sed '/^[^*"Entering"]/d' ; echo '\\033[0m\\c'"
+    #what are the branches for all the submodules?
+    sbranch = !"echo '\nSuperProject branch: '; git cbranch;  git sf 'git cbranch'"
+
+[core]
+    excludesfile = $HOME/devbootstrap/.gitignore_global
+    editor = 'subl -n -w' --wait
+
+[include]
+		# Put your user info in a file not tracked, if desired
+		# i.e.
+		#[user]
+  	#		email = you@gmail.com
+  	#		name = First Last
+    path = ~/devbootstrap/.gitconfig_notrack
