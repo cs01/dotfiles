@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 function echo_and_run {
   echo "$@"
   eval $(printf '%q ' "$@") < /dev/tty
@@ -23,5 +26,17 @@ echo ' '
 echo_and_run mv ${HOME}/.bashrc ${HOME}/.bashrc_${DATE}_BACKUP
 echo_and_run ln -fs ${HOME}/devbootstrap/.bashrc ${HOME}/.bashrc
 
+if [ ! -d ${HOME}/private ]; then
+  mkdir ${HOME}/private
+  echo "Created ${HOME}/private"
+fi
+
+
+
 # Run the new bashrc script
 source ${HOME}/.bashrc
+
+echo "SUCCESS"
+echo "~/devbootstrap/.bashrc has been sourced"
+echo "You now have a new .bash rc that: has a PS1 that automatically displays which git branch you're on, has colors, new aliases, new functions, up arrow for history, history across terminals"
+echo  "~/private/.bashrc will be automatically sourced as well (if it exists)"

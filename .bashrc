@@ -110,7 +110,7 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 
 # EDIT BASH RC'S
-alias br="subl $HOME/.bashrc"
+alias br="xdg-open $HOME/.bashrc"
 alias sbr="source $HOME/.bashrc"
 
 # VARIOUS
