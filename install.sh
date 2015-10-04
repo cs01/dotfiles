@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ "$(basename -- $0)" == "install.sh" ]]; then
+  echo "Don't run $0, source it: source install.sh"
+  exit 1
+fi
+
 DATE=`date +"%b-%d-%y"`
 
 # Backup, then create symlinks to input.rc, .gitconfig, .gconf
