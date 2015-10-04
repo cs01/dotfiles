@@ -179,3 +179,9 @@ function repeat() {
     sleep 1
   done
 }
+
+# Echo a command or commands, then run them
+function echo_and_run {
+  # echo "$@"
+  eval $(printf '%q ' "$@") < /dev/tty
+}
