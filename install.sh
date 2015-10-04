@@ -1,30 +1,23 @@
 #!/bin/bash
 
+# Exit on any error
 set -e
-
-function echo_and_run {
-  echo "$@"
-  eval $(printf '%q ' "$@") < /dev/tty
-}
 
 DATE=`date +"%b-%d-%y"`
 
 # Backup, then create symlinks to input.rc, .gitconfig, .gconf
-echo_and_run mv ${HOME}/.input.rc ${HOME}/.input.rc_${DATE}_BACKUP
-echo_and_run ln -s ${HOME}/devbootstrap/input.rc ${HOME}/.input.rc
-echo ' '
+mv ${HOME}/.input.rc ${HOME}/.input.rc_${DATE}_BACKUP
+ln -s ${HOME}/devbootstrap/input.rc ${HOME}/.input.rc
 
-echo_and_run mv ${HOME}/.gitconfig ${HOME}/.gitconfig_${DATE}_BACKUP
-echo_and_run ln -fs ${HOME}/devbootstrap/.gitconfig ${HOME}/.gitconfig
-echo ' '
+mv ${HOME}/.gitconfig ${HOME}/.gitconfig_${DATE}_BACKUP
+ln -s ${HOME}/devbootstrap/.gitconfig ${HOME}/.gitconfig
 
-echo_and_run mv ${HOME}/.gconf ${HOME}/.gconf_${DATE}_BACKUP
-echo_and_run ln -fs ${HOME}/devbootstrap/.gconf ${HOME}/.gconf
-echo ' '
+mv ${HOME}/.gconf ${HOME}/.gconf_${DATE}_BACKUP
+ln -s ${HOME}/devbootstrap/.gconf ${HOME}/.gconf
 
 # Create a backup of the .bashrc file
-echo_and_run mv ${HOME}/.bashrc ${HOME}/.bashrc_${DATE}_BACKUP
-echo_and_run ln -fs ${HOME}/devbootstrap/.bashrc ${HOME}/.bashrc
+mv ${HOME}/.bashrc ${HOME}/.bashrc_${DATE}_BACKUP
+ln -s ${HOME}/devbootstrap/.bashrc ${HOME}/.bashrc
 
 if [ ! -d ${HOME}/private ]; then
   mkdir ${HOME}/private
@@ -32,11 +25,12 @@ if [ ! -d ${HOME}/private ]; then
 fi
 
 
+NORMAL=`echo -e '\033[0m'`
+GREEN=`echo -e '\033[0;32m'`
 
-# Run the new bashrc script
-source ${HOME}/.bashrc
+echo "${GREEN}devbootstrap has been installed. You must restart your terminal now or run 'source ${HOME}/.bashrc'${NORMAL}"
+echo ' '
+echo "You now have a new .bashrc that:"
+echo "has a PS1 that automatically displays which git branch you're on, has colors, new aliases, new functions, up arrow for history, history across terminals"
+echo  -e "Place any user-specific or private shell commands in ~/private/.bashrc"
 
-echo "SUCCESS"
-echo "~/devbootstrap/.bashrc has been sourced"
-echo "You now have a new .bash rc that: has a PS1 that automatically displays which git branch you're on, has colors, new aliases, new functions, up arrow for history, history across terminals"
-echo  "~/private/.bashrc will be automatically sourced as well (if it exists)"
