@@ -18,6 +18,7 @@ mv ${HOME}/.gconf ${HOME}/.gconf_${DATE}_BACKUP
 ln -s ${HOME}/devbootstrap/.gconf ${HOME}/.gconf
 
 # Create a backup of the .bashrc file
+echo 'Note: Recommend moving your current .bashrc file to ~/private/.bashrc. A backup is being created now.'
 mv ${HOME}/.bashrc ${HOME}/.bashrc_${DATE}_BACKUP
 ln -s ${HOME}/devbootstrap/.bashrc ${HOME}/.bashrc
 
@@ -33,5 +34,5 @@ echo "${GREEN}devbootstrap has been installed. Any open terminals may have to be
 echo ' '
 echo "You now have a new .bashrc that:"
 echo "has a PS1 that automatically displays which git branch you're on, has history and tab completion across terminals, semantic colors, new aliases, new functions"
-echo  -e "Place any user-specific or private shell commands in ~/private/.bashrc"
+echo  -e "If you haven't already, place any user-specific or private shell commands in ~/private/.bashrc"
 
