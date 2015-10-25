@@ -7,7 +7,7 @@ fi
 
 DATE=`date +"%b-%d-%y"`
 
-# Backup, then create symlinks to input.rc, .gitconfig, .gconf
+# Backup, then create symlinks to input.rc, .gitconfig, .gconf, and .bashrc
 mv ${HOME}/.input.rc ${HOME}/.input.rc_${DATE}_BACKUP
 ln -s ${HOME}/devbootstrap/input.rc ${HOME}/.input.rc
 

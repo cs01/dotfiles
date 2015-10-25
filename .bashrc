@@ -1,5 +1,5 @@
 # This file assumes devbootstrap has been cloned to
-DEVBOOTSTRAP=$HOME/devbootstrap
+DEVBOOTSTRAP=$HOME/devbootstrap  # TODO determine this dynamically
 
 # Source any private bash files
 PRIVATE_BASH_FILE=${HOME}/private/.bashrc
@@ -8,10 +8,11 @@ if [ -f  $PRIVATE_BASH_FILE ]; then
 fi
 
 
+
 #################################
 #ENVIRONMENT VARIABLES
 #################################
-export PATH=".:/sbin/:/bin/:/usr/bin/:$HOME/bash_scripts:/usr/local/opt/ccache/libexec:/usr/local/bin:~/bin:/opt/local/bin:/opt/local/sbin"
+export PATH=".:/sbin/:/bin/:/usr/bin:$HOME/bash_scripts:/usr/local/opt/ccache/libexec:/usr/local/bin:~/bin:/opt/local/bin:/opt/local/sbin"
 export INPUTRC="$DEVBOOTSTRAP/.inputrc"
 export PYTHONPATH=".:/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/"
 export LD_LIBRARY_PATH="/usr/local/lib/"
@@ -26,9 +27,12 @@ export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
 export HISTSIZE=100000                   # big big history
 export HISTFILESIZE=100000               # big big history
 shopt -s histappend                      # append to history, don't overwrite it
-
 # Save and reload the history after each command finishes
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
+if [ -f  /usr/local/bin/virtualenvwrapper.sh ]; then
+  source /usr/local/bin/virtualenvwrapper.sh
+fi
 
 
 #################################
