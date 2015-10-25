@@ -15,11 +15,3 @@ Contains a .bashrc file, git files, and python rc files I use to save keystrokes
 
   `~/devbootstrap/install.sh`
 
-
-4. **Include your original bashrc**
-
-  `printf 'source $HOME/private/.bashrc' >> ~/.bashrc`
-
-5. **Run your new bashrc**
-
-  `source ~/.bashrc`
