@@ -30,9 +30,6 @@ shopt -s histappend                      # append to history, don't overwrite it
 # Save and reload the history after each command finishes
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
-if [ -f  /usr/local/bin/virtualenvwrapper.sh ]; then
-  source /usr/local/bin/virtualenvwrapper.sh
-fi
 
 
 #################################
@@ -69,6 +66,17 @@ function parse_git_branch {
 # Update bash prompt
 export PS1='\[${BLUE}\]${PWD} \[${NORMAL}\]\u@\h\[${GREEN}\]`parse_git_branch`\[${NORMAL}\]\n>> '
 
+
+if [ -f  /usr/local/bin/virtualenvwrapper.sh ]; then
+  source /usr/local/bin/virtualenvwrapper.sh
+  export LAST_VIRTUAL_ENV_FILE=${WORKON_HOME}/last_virtual_env
+  if [ -f  $LAST_VIRTUAL_ENV_FILE ]; then
+    # in $WORKON_DIR/preactivate: echo $1   > $LAST_VIRTUAL_ENV_FILE
+    # in $WORKON_DIR/predeactivate: echo '' > $LAST_VIRTUAL_ENV_FILE
+    # Automatically re-enter virtual environment
+    workon $(cat $LAST_VIRTUAL_ENV_FILE)
+  fi
+fi
 
 #################################
 #COLORED LS
@@ -122,6 +130,7 @@ alias fopen="xdg-open"
 alias edit="subl"
 alias e="edit"
 alias cc="pwd | tr -d '\n' | pbcopy; echo copied working dir to clipboard"  #copy to clipboard the current working dir
+alias notes="edit ~/notes.txt"
 
 # GIT
 export GIT_EDITOR="vim"
