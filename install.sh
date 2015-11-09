@@ -17,6 +17,9 @@ ln -s ${HOME}/devbootstrap/.gitconfig ${HOME}/.gitconfig
 mv ${HOME}/.gconf ${HOME}/.gconf_${DATE}_BACKUP
 ln -s ${HOME}/devbootstrap/.gconf ${HOME}/.gconf
 
+mv ${HOME}/.vimrc ${HOME}/.vimrc_${DATE}_BACKUP
+ln -s ${HOME}/devbootstrap/.vimrc ${HOME}/.vimrc
+
 # Create a backup of the .bashrc file
 echo 'Note: Recommend moving your current .bashrc file to ~/private/.bashrc. A backup is being created now.'
 mv ${HOME}/.bashrc ${HOME}/.bashrc_${DATE}_BACKUP

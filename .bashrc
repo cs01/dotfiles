@@ -131,6 +131,7 @@ alias edit="subl"
 alias e="edit"
 alias cc="pwd | tr -d '\n' | pbcopy; echo copied working dir to clipboard"  #copy to clipboard the current working dir
 alias notes="edit ~/notes.txt"
+alias sagi="sudo apt-get install"
 
 # GIT
 export GIT_EDITOR="vim"
