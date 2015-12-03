@@ -141,6 +141,8 @@ alias gitk='gitk 2>/dev/null'
 alias gitsui='git submodule update --init --recursive'
 alias gitbn='git name-rev --name-only HEAD'
 alias gitmergeclean='find . -name "*.orig" | xargs rm'
+alias gitcm="git commit -m "
+
 
 #################################
 #FUNCTIONS
@@ -154,13 +156,19 @@ function cd(){
 # case sensitive search, excluding binaries
 # and git directories
 function gr() {
-    grep -rI --exclude-dir=".git" "$1" .
+    grep --color -rIn --exclude-dir=".git" $1 .
+}
+
+# case sensitive search, excluding binaries
+# and git directories, but with context
+function grc() {
+    grep --color -rIn -B 2 -A 2 --exclude-dir=".git" $1 .
 }
 
 # case insensitive search, excluding binaries
 # and git directories
 function gri() {
-    grep -riI --exclude-dir=".git" "$1" .
+    grep --color -riIn --exclude-dir=".git" $1 .
 }
 
 # Locate all files a given name, open first one
