@@ -168,9 +168,21 @@ function gr() {
 }
 
 # case sensitive search, excluding binaries
+# and git directories
+function grpat() {
+    grep --include=$1 --color -rIn --exclude-dir=".git" $2 .
+}
+
+# case sensitive search, excluding binaries
 # and git directories, but with context
 function grc() {
     grep --color -rIn -B 2 -A 2 --exclude-dir=".git" $1 .
+}
+
+# case sensitive search, excluding binaries
+# and git directories, but with context
+function grcpat() {
+    grep --include=$1 --color -rIn -B 2 -A 2 --exclude-dir=".git" $2 .
 }
 
 # case insensitive search, excluding binaries
@@ -178,6 +190,13 @@ function grc() {
 function gri() {
     grep --color -riIn --exclude-dir=".git" $1 .
 }
+
+# case insensitive search, excluding binaries
+# and git directories
+function gripat() {
+    grep --include=$1 --color -riIn --exclude-dir=".git" $2 .
+}
+
 
 # Locate all files a given name, open first one
 function pew {
