@@ -24,8 +24,8 @@ export PYTHONDONTWRITEBYTECODE="True"
 # Preserve history across terminals
 # http://unix.stackexchange.com/questions/1288/preserve-bash-history-in-multiple-terminal-windows
 export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
-export HISTSIZE=100000                   # big big history
-export HISTFILESIZE=100000               # big big history
+export HISTSIZE=                   # big big history
+export HISTFILESIZE=               # big big history
 shopt -s histappend                      # append to history, don't overwrite it
 # Save and reload the history after each command finishes
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
@@ -73,6 +73,8 @@ if [ -f  /usr/local/bin/virtualenvwrapper.sh ]; then
   export LAST_VIRTUAL_ENV_FILE=${WORKON_HOME}/last_virtual_env
   echo -e "#!/bin/bash\n#Save this venv to be restored when a new shell opens\necho \$1 > $LAST_VIRTUAL_ENV_FILE" > $WORKON_HOME/preactivate
   echo -e "#!/bin/bash\n#Wipe saved venv\necho '' > $LAST_VIRTUAL_ENV_FILE" > $WORKON_HOME/predeactivate
+  chmod +x $WORKON_HOME/preactivate
+  chmod +x $WORKON_HOME/predeactivate
   # If the last virtual envfile already exists, switch to it
   if [ -f  $LAST_VIRTUAL_ENV_FILE ]; then
     # Automatically re-enter virtual environment (last line of LAST_VIRTUAL_ENV_FILE is used)
