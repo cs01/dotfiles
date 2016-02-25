@@ -131,7 +131,9 @@ alias edit="subl"
 alias e="edit"
 alias cc="pwd | tr -d '\n' | pbcopy; echo copied working dir to clipboard"  #copy to clipboard the current working dir
 alias notes="edit ~/notes.txt"
+alias todo="edit ~/todo.txt"
 alias sagi="sudo apt-get install"
+alias resetwifi="nmcli nm wifi off && nmcli nm wifi on"
 
 # GIT
 export GIT_EDITOR="vim"

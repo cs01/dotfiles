@@ -5,13 +5,9 @@ Contains a .bashrc file, git files, and python rc files I use to save keystrokes
 ## Install
 1. **Clone**
 
-  `git clone https://github.com/cs01/devbootstrap.git ~`
+  `git clone https://github.com/cs01/devbootstrap.git ~/devbootstrap`
 
-2. **Save current bashrc**
+2. **Install devbootstrap**
 
-  `mkdir ~/private && mv ~/.bashrc ~/private/.bashrc`
-
-3. **Install devbootstrap**
-
-  `~/devbootstrap/install.sh`
+  `source ~/devbootstrap/install.sh`
 

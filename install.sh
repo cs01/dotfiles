@@ -7,6 +7,8 @@ fi
 
 DATE=`date +"%b-%d-%y"`
 
+echo "Backing up existing files to ${HOME}/[FILE]_${DATE}_BACKUP"
+
 # Backup, then create symlinks to input.rc, .gitconfig, .gconf, and .bashrc
 mv ${HOME}/.input.rc ${HOME}/.input.rc_${DATE}_BACKUP
 ln -s ${HOME}/devbootstrap/input.rc ${HOME}/.input.rc
@@ -21,13 +23,12 @@ mv ${HOME}/.vimrc ${HOME}/.vimrc_${DATE}_BACKUP
 ln -s ${HOME}/devbootstrap/.vimrc ${HOME}/.vimrc
 
 # Create a backup of the .bashrc file
-echo 'Note: Recommend moving your current .bashrc file to ~/private/.bashrc. A backup is being created now.'
 mv ${HOME}/.bashrc ${HOME}/.bashrc_${DATE}_BACKUP
 ln -s ${HOME}/devbootstrap/.bashrc ${HOME}/.bashrc
 
 if [ ! -d ${HOME}/private ]; then
   mkdir ${HOME}/private
-  echo "Created ${HOME}/private"
+  echo "Created ${HOME}/private. If there is a .bashrc file in that directory, it will be sourced from ~/.bashrc."
 fi
 
 
