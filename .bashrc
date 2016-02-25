@@ -24,8 +24,8 @@ export PYTHONDONTWRITEBYTECODE="True"
 # Preserve history across terminals
 # http://unix.stackexchange.com/questions/1288/preserve-bash-history-in-multiple-terminal-windows
 export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
-export HISTSIZE=100000                   # big big history
-export HISTFILESIZE=100000               # big big history
+export HISTSIZE=                   # big big history
+export HISTFILESIZE=               # big big history
 shopt -s histappend                      # append to history, don't overwrite it
 # Save and reload the history after each command finishes
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
@@ -66,15 +66,25 @@ function parse_git_branch {
 # Update bash prompt
 export PS1='\[${BLUE}\]${PWD} \[${NORMAL}\]\u@\h\[${GREEN}\]`parse_git_branch`\[${NORMAL}\]\n>> '
 
-
 if [ -f  /usr/local/bin/virtualenvwrapper.sh ]; then
   source /usr/local/bin/virtualenvwrapper.sh
+
+  # Set up hooks to automatically enter last virtual env
   export LAST_VIRTUAL_ENV_FILE=${WORKON_HOME}/last_virtual_env
+  echo -e "#!/bin/bash\n#Save this venv to be restored when a new shell opens\necho \$1 > $LAST_VIRTUAL_ENV_FILE" > $WORKON_HOME/preactivate
+  echo -e "#!/bin/bash\n#Wipe saved venv\necho '' > $LAST_VIRTUAL_ENV_FILE" > $WORKON_HOME/predeactivate
+  chmod +x $WORKON_HOME/preactivate
+  chmod +x $WORKON_HOME/predeactivate
+  # If the last virtual envfile already exists, switch to it
   if [ -f  $LAST_VIRTUAL_ENV_FILE ]; then
-    # in $WORKON_DIR/preactivate: echo $1   > $LAST_VIRTUAL_ENV_FILE
-    # in $WORKON_DIR/predeactivate: echo '' > $LAST_VIRTUAL_ENV_FILE
-    # Automatically re-enter virtual environment
-    workon $(cat $LAST_VIRTUAL_ENV_FILE)
+    # Automatically re-enter virtual environment (last line of LAST_VIRTUAL_ENV_FILE is used)
+    LAST_VIRTUAL_ENV_NAME=$(tail -n 1 $LAST_VIRTUAL_ENV_FILE)
+    if [ -z $LAST_VIRTUAL_ENV_NAME ]; then
+      # File was blank, do nothing
+      true
+    else
+      workon $LAST_VIRTUAL_ENV_NAME
+    fi
   fi
 fi
 
