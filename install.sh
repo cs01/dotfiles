@@ -1,42 +1,34 @@
 #!/bin/bash
 
-if [[ "$(basename -- $0)" == "install.sh" ]]; then
-  echo "Don't run $0, source it: source install.sh"
-  exit 1
+# Immediately exit on error
+set -e
+
+trap 'echo Devbootstrap did not complete installation due to an unknown error.' ERR
+trap 'echo Installed devbootstrap' EXIT
+if [[ "$(basename -- $0)" != "install.sh" ]]; then
+  echo "Don't source this file, execute it."
+  return 1
 fi
 
+DEVBOOTSTRAP_PATH=${HOME}/devbootstrap
+DEVBOOSTRAP_FILES=(.input.rc .gitconfig .gconf .vimrc .bashrc)
 DATE=`date +"%b-%d-%y"`
 
-echo "Backing up existing files to ${HOME}/[FILE]_${DATE}_BACKUP"
+for i in "${DEVBOOSTRAP_FILES[@]}"
+do
+  echo "Backing up ${HOME}/${i} to  ${HOME}/${i}_${DATE}_BACKUP"
+  mv ${HOME}/${i}  ${HOME}/${i}_${DATE}_BACKUP
+done
 
-# Backup, then create symlinks to input.rc, .gitconfig, .gconf, and .bashrc
-mv ${HOME}/.input.rc ${HOME}/.input.rc_${DATE}_BACKUP
-ln -s ${HOME}/devbootstrap/input.rc ${HOME}/.input.rc
-
-mv ${HOME}/.gitconfig ${HOME}/.gitconfig_${DATE}_BACKUP
-ln -s ${HOME}/devbootstrap/.gitconfig ${HOME}/.gitconfig
-
-mv ${HOME}/.gconf ${HOME}/.gconf_${DATE}_BACKUP
-ln -s ${HOME}/devbootstrap/.gconf ${HOME}/.gconf
-
-mv ${HOME}/.vimrc ${HOME}/.vimrc_${DATE}_BACKUP
-ln -s ${HOME}/devbootstrap/.vimrc ${HOME}/.vimrc
-
-# Create a backup of the .bashrc file
-mv ${HOME}/.bashrc ${HOME}/.bashrc_${DATE}_BACKUP
-ln -s ${HOME}/devbootstrap/.bashrc ${HOME}/.bashrc
+for i in "${DEVBOOSTRAP_FILES[@]}"
+do
+  echo "Pointing ${DEVBOOTSTRAP_PATH}/${i} to ${HOME}/${i}"
+  ln -sf ${DEVBOOTSTRAP_PATH}/${i} ${HOME}/${i}
+done
 
 if [ ! -d ${HOME}/private ]; then
   mkdir ${HOME}/private
   echo "Created ${HOME}/private. If there is a .bashrc file in that directory, it will be sourced from ~/.bashrc."
 fi
 
-
-source ~/devbootstrap/.bashrc
-
-echo "${GREEN}devbootstrap has been installed. Any open terminals may have to be restarted.${NORMAL}"
-echo ' '
-echo "You now have a new .bashrc that:"
-echo "has a PS1 that automatically displays which git branch you're on, has history and tab completion across terminals, semantic colors, new aliases, new functions"
-echo  -e "If you haven't already, place any user-specific or private shell commands in ~/private/.bashrc"
-
+echo "Add any private shell commands to ~/private/.bashrc"
