@@ -22,8 +22,10 @@ DATE=`date +"%b-%d-%y"`
 
 for i in "${DEVBOOSTRAP_FILES[@]}"
 do
-  echo "Backing up ${HOME}/${i} to  ${HOME}/${i}_${DATE}_BACKUP"
-  mv ${HOME}/${i}  ${HOME}/${i}_${DATE}_BACKUP
+  if [  -f  ${HOME}/${i} ]; then
+    echo "Backing up ${HOME}/${i} to  ${HOME}/${i}_${DATE}_BACKUP"
+    mv ${HOME}/${i}  ${HOME}/${i}_${DATE}_BACKUP
+  fi
 done
 
 for i in "${DEVBOOSTRAP_FILES[@]}"
