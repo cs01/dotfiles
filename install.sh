@@ -4,13 +4,19 @@
 set -e
 
 trap 'echo Devbootstrap did not complete installation due to an unknown error.' ERR
-trap 'echo Installed devbootstrap' EXIT
+
 if [[ "$(basename -- $0)" != "install.sh" ]]; then
   echo "Don't source this file, execute it."
   return 1
 fi
 
 DEVBOOTSTRAP_PATH=${HOME}/devbootstrap
+if [ ! -d  $DEVBOOTSTRAP_PATH ]; then
+  echo "devbootstrap must be cloned to $DEVBOOTSTRAP_PATH. Exiting."
+  exit  1
+fi
+
+
 DEVBOOSTRAP_FILES=(.input.rc .gitconfig .gconf .vimrc .bashrc)
 DATE=`date +"%b-%d-%y"`
 
@@ -31,4 +37,5 @@ if [ ! -d ${HOME}/private ]; then
   echo "Created ${HOME}/private. If there is a .bashrc file in that directory, it will be sourced from ~/.bashrc."
 fi
 
-echo "Add any private shell commands to ~/private/.bashrc"
+echo "Installed devbootstrap"
+echo "Note: Add private shell commands to ~/private/.bashrc"

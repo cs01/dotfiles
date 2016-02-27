@@ -21,22 +21,19 @@ export LD_LIBRARY_PATH="/usr/local/lib/"
 export PYTHONSTARTUP="$DEVBOOTSTRAP/.pythonrc.py"
 export PYTHONDONTWRITEBYTECODE="True"
 
-# Preserve history across terminals
-# http://unix.stackexchange.com/questions/1288/preserve-bash-history-in-multiple-terminal-windows
+# History
 export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
 export HISTSIZE=                   # big big history
 export HISTFILESIZE=               # big big history
 shopt -s histappend                      # append to history, don't overwrite it
+# Preserve history across terminals
+# http://unix.stackexchange.com/questions/1288/preserve-bash-history-in-multiple-terminal-windows
 # Save and reload the history after each command finishes
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 
 
-#################################
-#RE-DEFINE PROMPT STRING (PS1)
-#To be colorized and show git branch/commit
-#################################
-
+# Color escape sequences
 NORMAL=`echo -e '\033[0m'`
 RED=`echo -e '\033[31m'`
 GREEN=`echo -e '\033[0;32m'`
@@ -45,6 +42,10 @@ BLUE=`echo -e '\033[0;34m'`
 LBLUE=`echo -e '\033[1;34m'`
 YELLOW=`echo -e '\033[0;33m'`
 
+#################################
+#RE-DEFINE PROMPT STRING (PS1)
+#To be colorized and show git branch/commit
+#################################
 # prefix with \[ to go to next line when out of space typing a command in bash
 # Without the \[ \], bash will think the bytes which constitute the escape
 # sequences for the color codes will actually take up space on the screen, so
