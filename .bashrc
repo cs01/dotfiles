@@ -162,7 +162,7 @@ alias gitcm="git commit -m "
 
 #display contents of directory after entering it
 function cd(){
-	builtin cd "$*" && ll
+	builtin cd "$*" && ls -la
 }
 
 # case sensitive search, excluding binaries
