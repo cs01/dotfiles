@@ -71,20 +71,16 @@ if [ -f  /usr/local/bin/virtualenvwrapper.sh ]; then
   source /usr/local/bin/virtualenvwrapper.sh
 
   # Set up hooks to automatically enter last virtual env
-  export LAST_VIRTUAL_ENV_FILE=${WORKON_HOME}/last_virtual_env
-  echo -e "#!/bin/bash\n#Save this venv to be restored when a new shell opens\necho \$1 > $LAST_VIRTUAL_ENV_FILE" > $WORKON_HOME/preactivate
-  echo -e "#!/bin/bash\n#Wipe saved venv\necho '' > $LAST_VIRTUAL_ENV_FILE" > $WORKON_HOME/predeactivate
+  export LAST_VENV_FILE=${WORKON_HOME}/.last_virtual_env
+  echo -e "#!/bin/bash\necho \$1 > $LAST_VENV_FILE" > $WORKON_HOME/preactivate
+  echo -e "#!/bin/bash\necho '' > $LAST_VENV_FILE" > $WORKON_HOME/predeactivate
   chmod +x $WORKON_HOME/preactivate
   chmod +x $WORKON_HOME/predeactivate
-  # If the last virtual envfile already exists, switch to it
-  if [ -f  $LAST_VIRTUAL_ENV_FILE ]; then
-    # Automatically re-enter virtual environment (last line of LAST_VIRTUAL_ENV_FILE is used)
-    LAST_VIRTUAL_ENV_NAME=$(tail -n 1 $LAST_VIRTUAL_ENV_FILE)
-    if [ -z $LAST_VIRTUAL_ENV_NAME ]; then
-      # File was blank, do nothing
-      true
-    else
-      workon $LAST_VIRTUAL_ENV_NAME
+  if [ -f  $LAST_VENV_FILE ]; then
+    LAST_VENV=$(tail -n 1 $LAST_VENV_FILE)
+    if [ ! -z $LAST_VENV ]; then
+      # Automatically re-enter virtual environment
+      workon $LAST_VENV
     fi
   fi
 fi
@@ -163,7 +159,7 @@ alias gitcm="git commit -m "
 
 #display contents of directory after entering it
 function cd(){
-	builtin cd "$*" && ll
+	builtin cd "$*" && ls -la
 }
 
 # case sensitive search, excluding binaries
