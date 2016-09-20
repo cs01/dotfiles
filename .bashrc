@@ -23,9 +23,9 @@ export PYTHONDONTWRITEBYTECODE="True"
 
 # History
 export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
-export HISTSIZE=                   # big big history
-export HISTFILESIZE=               # big big history
-shopt -s histappend                      # append to history, don't overwrite it
+export HISTSIZE=
+export HISTFILESIZE=
+shopt -s histappend
 # Preserve history across terminals
 # http://unix.stackexchange.com/questions/1288/preserve-bash-history-in-multiple-terminal-windows
 # Save and reload the history after each command finishes
@@ -140,6 +140,7 @@ alias cc="pwd | tr -d '\n' | pbcopy; echo copied working dir to clipboard"  #cop
 alias notes="edit ~/notes.txt"
 alias todo="edit ~/todo.txt"
 alias sagi="sudo apt-get install"
+alias upgrade="sudo apt-get update && sudo apt-get upgrade"
 alias resetwifi="nmcli nm wifi off && nmcli nm wifi on"
 
 # GIT
