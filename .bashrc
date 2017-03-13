@@ -7,6 +7,7 @@ if [ -f  $PRIVATE_BASH_FILE ]; then
   source $PRIVATE_BASH_FILE
 fi
 
+source $HOME/.cargo/env
 
 
 #################################
@@ -20,6 +21,7 @@ export LD_LIBRARY_PATH="/usr/local/lib/"
 # Python
 export PYTHONSTARTUP="$DEVBOOTSTRAP/.pythonrc.py"
 export PYTHONDONTWRITEBYTECODE="True"
+export DJANGO_DEVELOPMENT=true
 
 # History
 export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
@@ -67,23 +69,25 @@ function parse_git_branch {
 # Update bash prompt
 export PS1='\[${BLUE}\]${PWD} \[${NORMAL}\]\u@\h\[${GREEN}\]`parse_git_branch`\[${NORMAL}\]\n>> '
 
-if [ -f  /usr/local/bin/virtualenvwrapper.sh ]; then
-  source /usr/local/bin/virtualenvwrapper.sh
 
-  # Set up hooks to automatically enter last virtual env
-  export LAST_VENV_FILE=${WORKON_HOME}/.last_virtual_env
-  echo -e "#!/bin/bash\necho \$1 > $LAST_VENV_FILE" > $WORKON_HOME/preactivate
-  echo -e "#!/bin/bash\necho '' > $LAST_VENV_FILE" > $WORKON_HOME/predeactivate
-  chmod +x $WORKON_HOME/preactivate
-  chmod +x $WORKON_HOME/predeactivate
-  if [ -f  $LAST_VENV_FILE ]; then
-    LAST_VENV=$(tail -n 1 $LAST_VENV_FILE)
-    if [ ! -z $LAST_VENV ]; then
-      # Automatically re-enter virtual environment
-      workon $LAST_VENV
+if [ -f  /usr/local/bin/virtualenvwrapper.sh ]; then
+    source /usr/local/bin/virtualenvwrapper.sh
+
+    # Set up hooks to automatically enter last virtual env
+    export LAST_VENV_FILE=${WORKON_HOME}/.last_virtual_env
+    echo -e "#!/bin/bash\necho \$1 > $LAST_VENV_FILE" > $WORKON_HOME/preactivate
+    echo -e "#!/bin/bash\necho '' > $LAST_VENV_FILE" > $WORKON_HOME/predeactivate
+    chmod +x $WORKON_HOME/preactivate
+    chmod +x $WORKON_HOME/predeactivate
+    if [ -f  $LAST_VENV_FILE ]; then
+        LAST_VENV=$(tail -n 1 $LAST_VENV_FILE)
+        if [ ! -z $LAST_VENV ]; then
+            # Automatically re-enter virtual environment
+            workon $LAST_VENV
+        fi
     fi
-  fi
 fi
+
 
 #################################
 #COLORED LS
@@ -224,6 +228,7 @@ function textme() {
 
 # Run a command once every second until cancelled
 function repeat() {
+  # watch
   while :
   do
     $@
