@@ -4,15 +4,15 @@
     status = auto
 
 [diff]
-    tool = $HOME/devbootstrap/.git-diff.sh
-    guitool = $HOME/devbootstrap/.git-diff.sh
-    external = $HOME/devbootstrap/.git-diff.sh
+    tool = $HOME/dotfiles/.git-diff.sh
+    guitool = $HOME/dotfiles/.git-diff.sh
+    external = $HOME/dotfiles/.git-diff.sh
 
 [merge]
     tool = mymeld
 
 [mergetool "mymeld"]
-    cmd = $HOME/devbootstrap/.git-merge.sh $BASE $LOCAL $REMOTE $MERGED
+    cmd = $HOME/dotfiles/.git-merge.sh $BASE $LOCAL $REMOTE $MERGED
 
 [push]
     default = matching
@@ -26,7 +26,7 @@
     sbranch = !"echo '\nSuperProject branch: '; git cbranch;  git sf 'git cbranch'"
 
 [core]
-    excludesfile = $HOME/devbootstrap/.gitignore_global
+    excludesfile = $HOME/dotfiles/.gitignore_global
     editor = 'subl -n -w' --wait
 
 [include]
@@ -35,4 +35,4 @@
 		#[user]
   	#		email = you@gmail.com
   	#		name = First Last
-    path = ~/devbootstrap/.gitconfig_notrack
+    path = ~/dotfiles/.gitconfig_notrack

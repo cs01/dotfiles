@@ -1,5 +1,5 @@
-# This file assumes devbootstrap has been cloned to
-DEVBOOTSTRAP=$HOME/devbootstrap  # TODO determine this dynamically
+# This file assumes dotfiles has been cloned to
+DEVBOOTSTRAP=$HOME/dotfiles  # TODO determine this dynamically
 
 # Source any private bash files
 PRIVATE_BASH_FILE=${HOME}/private/.bashrc
@@ -7,7 +7,16 @@ if [ -f  $PRIVATE_BASH_FILE ]; then
   source $PRIVATE_BASH_FILE
 fi
 
+# For rustlang
 source $HOME/.cargo/env
+
+# Press up/down arrows and only search for what's currently entered in terminal
+# http://stackoverflow.com/a/1030206/2893090
+if [[ $- == *i* ]]
+then
+    bind '"\e[A": history-search-backward'
+    bind '"\e[B": history-search-forward'
+fi
 
 
 #################################
