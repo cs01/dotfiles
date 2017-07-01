@@ -22,7 +22,8 @@ fi
 #################################
 #ENVIRONMENT VARIABLES
 #################################
-export PATH=".:/sbin/:/bin/:/usr/bin:$HOME/bash_scripts:/usr/local/opt/ccache/libexec:/usr/local/bin:~/bin:/opt/local/bin:/opt/local/sbin"
+export GOPATH="$HOME/go"
+export PATH=".:/sbin/:/bin/:/usr/local/go/bin:/usr/bin:$HOME/bash_scripts:/usr/local/opt/ccache/libexec:/usr/local/bin:~/bin:/opt/local/bin:/opt/local/sbin:$GOPATH/bin"
 export INPUTRC="$DEVBOOTSTRAP/.inputrc"
 export PYTHONPATH=".:/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/"
 export LD_LIBRARY_PATH="/usr/local/lib/"
@@ -146,6 +147,9 @@ alias br="xdg-open $HOME/.bashrc"
 alias sbr="source $HOME/.bashrc"
 
 # VARIOUS
+alias sc="make superclean"
+alias mt="make tree -j8"
+alias scmt="make superclean && make tree -j8"
 alias fopen="xdg-open"
 alias edit="subl"
 alias e="edit"
@@ -158,6 +162,7 @@ alias resetwifi="nmcli nm wifi off && nmcli nm wifi on"
 
 # GIT
 export GIT_EDITOR="vim"
+alias ga="git add -u && git status"
 alias gits="git status"
 alias gka='gitk --all --date-order &'
 alias gitk='gitk 2>/dev/null'
