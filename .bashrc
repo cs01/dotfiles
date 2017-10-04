@@ -7,8 +7,10 @@ if [ -f  $PRIVATE_BASH_FILE ]; then
   source $PRIVATE_BASH_FILE
 fi
 
-# For rustlang
-source $HOME/.cargo/env
+# For rust
+if [ -f  $HOME/.cargo/env ]; then
+  source $HOME/.cargo/env
+fi
 
 # Press up/down arrows and only search for what's currently entered in terminal
 # http://stackoverflow.com/a/1030206/2893090
@@ -143,7 +145,7 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 
 # EDIT BASH RC'S
-alias br="xdg-open $HOME/.bashrc"
+alias br="e $HOME/.bashrc"
 alias sbr="source $HOME/.bashrc"
 
 # VARIOUS
@@ -255,3 +257,7 @@ function echo_and_run {
   # echo "$@"
   eval $(printf '%q ' "$@") < /dev/tty
 }
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
