@@ -1,10 +1,26 @@
 # This file assumes dotfiles has been cloned to
 DEVBOOTSTRAP=$HOME/dotfiles  # TODO determine this dynamically
 
-# Source any private bash files
-PRIVATE_BASH_FILE=${HOME}/private/.bashrc
-if [ -f  $PRIVATE_BASH_FILE ]; then
-  source $PRIVATE_BASH_FILE
+case "$OSTYPE" in
+  linux*)   PLATFORM="linux" ;;
+  darwin*)  PLATFORM="mac" ;;
+  win*|msys*|cygwin*)     PLATFORM="win" ;;
+  *)        PLATFORM="unknown: $OSTYPE" ;;
+esac
+
+
+#########
+# Platform specific
+#########
+if [[ $PLATFORM = 'linux' ]];then
+  alias open="xdg-open"
+  export PYTHONPATH=".:/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/"
+  export LD_LIBRARY_PATH="/usr/local/lib/"
+
+elif [[ $PLATFORM = 'mac' ]];then
+  venvscript="/Users/$USER/Library/Python/3.6/bin/virtualenvwrapper.sh"
+  VIRTUALENVWRAPPER_PYTHON=/opt/homebrew/bin/python3
+  PATH=$PATH:/Users/$USER/Library/Python/3.6/bin/
 fi
 
 # For rust
@@ -25,10 +41,9 @@ fi
 #ENVIRONMENT VARIABLES
 #################################
 export GOPATH="$HOME/go"
-export PATH=".:/sbin/:/bin/:/usr/local/go/bin:/usr/bin:$HOME/bash_scripts:/usr/local/opt/ccache/libexec:/usr/local/bin:~/bin:/opt/local/bin:/opt/local/sbin:$GOPATH/bin"
+
+PATH=$PATH:":$GOPATH/bin"
 export INPUTRC="$DEVBOOTSTRAP/.inputrc"
-export PYTHONPATH=".:/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/"
-export LD_LIBRARY_PATH="/usr/local/lib/"
 
 # Python
 export PYTHONSTARTUP="$DEVBOOTSTRAP/.pythonrc.py"
@@ -45,8 +60,6 @@ shopt -s histappend
 # Save and reload the history after each command finishes
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
-
-
 # Color escape sequences
 NORMAL=`echo -e '\033[0m'`
 RED=`echo -e '\033[31m'`
@@ -56,34 +69,33 @@ BLUE=`echo -e '\033[0;34m'`
 LBLUE=`echo -e '\033[1;34m'`
 YELLOW=`echo -e '\033[0;33m'`
 
-#################################
-#RE-DEFINE PROMPT STRING (PS1)
-#To be colorized and show git branch/commit
-#################################
-# prefix with \[ to go to next line when out of space typing a command in bash
-# Without the \[ \], bash will think the bytes which constitute the escape
-# sequences for the color codes will actually take up space on the screen, so
-# bash won't be able to know where the cursor actually is.
-# http://mywiki.wooledge.org/BashFAQ/053
-# source ~/.git-prompt.sh # defines the function __git_ps1
-
 # show git branch in prompt
 #\u is username
 #\h is hostname
 #\W Print the base of current working directory.
 #\$: Display # (indicates root user) if the effective UID is 0, otherwise display a $.
-function parse_git_dirty {
-  [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit"* ]] && echo "*"
+parse_git_dirty() {
+  [ "$(git status --porcelain 2> /dev/null)" ] && echo "*"
 }
-function parse_git_branch {
+git_branch() {
   git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/(\1$(parse_git_dirty))/"
 }
-# Update bash prompt
-export PS1='\[${BLUE}\]${PWD} \[${NORMAL}\]\u@\h\[${GREEN}\]`parse_git_branch`\[${NORMAL}\]\n>> '
+# tab completion for git
+source $HOME/dotfiles/git-completion.bash
 
+# turn prompt into something like
+# /path/to/working/dir user@macbook-pro(master*)
 
-if [ -f  /usr/local/bin/virtualenvwrapper.sh ]; then
-    source /usr/local/bin/virtualenvwrapper.sh
+# prefix with \[ to go to next line when out of space typing a command in bash
+# Without the \[ \], bash will think the bytes which constitute the escape
+# sequences for the color codes will actually take up space on the screen, so
+# bash won't be able to know where the cursor actually is.
+# http://mywiki.wooledge.org/BashFAQ/053\
+export PS1='\[${LBLUE}\]${PWD} \[${NORMAL}\]\u@\h\[${GREEN}\]$(git_branch)\[${NORMAL}\]
+>> '
+
+if [ -f  "$venvscript" ]; then
+    source "$venvscript"
 
     # Set up hooks to automatically enter last virtual env
     export LAST_VENV_FILE=${WORKON_HOME}/.last_virtual_env
@@ -136,9 +148,6 @@ fi
 # LISTING
 alias ll="ls -la"
 
-# CLEARING
-alias clc="clear"
-
 # DIR NAVIGATION
 alias ..="cd .."
 alias ...="cd ../.."
@@ -149,11 +158,7 @@ alias br="e $HOME/.bashrc"
 alias sbr="source $HOME/.bashrc"
 
 # VARIOUS
-alias sc="make superclean"
-alias mt="make tree -j8"
-alias scmt="make superclean && make tree -j8"
-alias fopen="xdg-open"
-alias edit="subl"
+alias edit="atom"
 alias e="edit"
 alias cc="pwd | tr -d '\n' | pbcopy; echo copied working dir to clipboard"  #copy to clipboard the current working dir
 alias notes="edit ~/notes.txt"
@@ -164,87 +169,34 @@ alias resetwifi="nmcli nm wifi off && nmcli nm wifi on"
 
 # GIT
 export GIT_EDITOR="vim"
-alias ga="git add -u && git status"
 alias gits="git status"
 alias gka='gitk --all --date-order &'
 alias gitk='gitk 2>/dev/null'
 alias gitsui='git submodule update --init --recursive'
-alias gitbn='git name-rev --name-only HEAD'
-alias gitmergeclean='find . -name "*.orig" | xargs rm'
-alias gitcm="git commit -m "
-
+# always show color, never search binaries or .git dirs, always search recursively
+alias grep="grep --color -Ir --exclude-dir=.git"
+# show surrounding lines
+alias grepc="grep -B 2 -A 2"
 
 #################################
 #FUNCTIONS
 #################################
 
 #display contents of directory after entering it
-function cd(){
-	builtin cd "$*" && ls -la
-}
-
-# case sensitive search, excluding binaries
-# and git directories
-function gr() {
-    grep --color -rIn --exclude-dir=".git" $1 .
-}
-
-# case sensitive search, excluding binaries
-# and git directories
-function grpat() {
-    grep --include=$1 --color -rIn --exclude-dir=".git" $2 .
-}
-
-# case sensitive search, excluding binaries
-# and git directories, but with context
-function grc() {
-    grep --color -rIn -B 2 -A 2 --exclude-dir=".git" $1 .
-}
-
-# case sensitive search, excluding binaries
-# and git directories, but with context
-function grcpat() {
-    grep --include=$1 --color -rIn -B 2 -A 2 --exclude-dir=".git" $2 .
-}
-
-# case insensitive search, excluding binaries
-# and git directories
-function gri() {
-    grep --color -riIn --exclude-dir=".git" $1 .
-}
-
-# case insensitive search, excluding binaries
-# and git directories
-function gripat() {
-    grep --include=$1 --color -riIn --exclude-dir=".git" $2 .
-}
-
-
-# Locate all files a given name, open first one
-function pew {
-  chosen=`locate $1 | sed -n 1p`
-  echo $chosen
-  xdg-open $chosen
-}
-
-# Run locate command on argument
-# then open all results returned
-function pewall {
-  chosen=`locate $1`
-  echo -e "$chosen \n"
-  xdg-open $chosen
+cd(){
+	builtin cd $@ && ls -la
 }
 
 # Run one or more bash commands and pipe stdout and stderr
 # to a file, then open that file when complete
-function textme() {
+textme() {
 	$@ &> /tmp/textme.txt
-	subl  /tmp/textme.txt
+	edit  /tmp/textme.txt
 }
 
 # Run a command once every second until cancelled
-function repeat() {
-  # watch
+repeat() {
+  # watch does not exist by default on macs, but this works everywhere
   while :
   do
     $@
@@ -253,11 +205,55 @@ function repeat() {
 }
 
 # Echo a command or commands, then run them
-function echo_and_run {
-  # echo "$@"
+echo_and_run() {
+  echo "$@"
   eval $(printf '%q ' "$@") < /dev/tty
 }
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+d() {
+    local search=""
+    echo "duck duck go: $@"
+    for term in $@; do
+        search="$search%20$term"
+    done
+    open "http://www.duckduckgo.com/?q=$search"
+}
+
+g() {
+  local search=""
+  echo "google: $@"
+  for term in $@; do
+      search="$search%20$term"
+  done
+  open "http://www.google.com/search?q=$search"
+}
+
+# for colored man pages (and maybe some other unwanted side effect?)
+export LESS_TERMCAP_mb=$'\E[1;31m'     # begin bold
+export LESS_TERMCAP_md=$'\E[1;36m'     # begin blink
+export LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
+export LESS_TERMCAP_so=$'\E[01;44;33m' # begin reverse video
+export LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
+export LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
+export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
+export GROFF_NO_SGR=1                  # for konsole and gnome-terminal
+
+
+cal() {
+    local year=$(date +%Y)
+    if (( $# == 0 )); then
+        command cal "$year"
+    elif (( $# == 1 && 1 <= $1 && $1 < 13 )); then
+        command cal "$1" "$year"
+    else
+        command cal "$@"
+    fi
+}
+
+# Print each filename followed by its contents
+catt() {
+    for file in "$@"; do
+        echo -e "\e[1;36m# $file\e[0m"
+        cat "$file"
+    done
+}
