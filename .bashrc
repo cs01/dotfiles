@@ -199,7 +199,9 @@ repeat() {
   # watch does not exist by default on macs, but this works everywhere
   while :
   do
-    $@
+    # use eval to run in current shell so aliases like ll are
+    # available
+    eval "$@"
     sleep 1
   done
 }
