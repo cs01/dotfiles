@@ -1,47 +1,41 @@
 #!/bin/bash
+# Symlink dotfiles to home directory
 
-# Immediately exit on error
-set -e
+DOTFILES="$HOME/git/dotfiles"
 
-trap 'echo Devbootstrap did not complete installation due to an unknown error.' ERR
+files=(.zshrc .vimrc .gitconfig .gitignore_global)
 
-DESIRED_DOTFILES_PATH=${HOME}/dotfiles
-ACTUAL_DOTFILES_PATH=`dirname $0`
-# echo
-if [ ! $DESIRED_DOTFILES_PATH -ef $ACTUAL_DOTFILES_PATH ]; then
-  echo "dotfiles must be cloned to $DOTFILES_PATH. Exiting."
-  exit  1
-fi
-
-
-DOTFILES_PATH=${HOME}/dotfiles
-if [ ! -d  $DOTFILES_PATH ]; then
-  echo "dotfiles must be cloned to $DOTFILES_PATH. Exiting."
-  exit  1
-fi
-
-
-DEVBOOSTRAP_FILES=(.input.rc .gitconfig .gconf .vimrc .bashrc .vim)
-DATE=`date +"%b-%d-%y"`
-
-for i in "${DEVBOOSTRAP_FILES[@]}"
-do
-  if [ -f ${HOME}/${i} ]; then
-    echo "Backing up ${HOME}/${i} to  ${HOME}/${i}_${DATE}_BACKUP"
-    mv ${HOME}/${i}  ${HOME}/${i}_${DATE}_BACKUP
-  fi
+for file in "${files[@]}"; do
+    target="$HOME/$file"
+    if [[ -e "$target" && ! -L "$target" ]]; then
+        echo "Backing up existing $file to $file.bak"
+        mv "$target" "$target.bak"
+    fi
+    ln -sf "$DOTFILES/$file" "$target"
+    echo "Linked $file"
 done
 
-for i in "${DEVBOOSTRAP_FILES[@]}"
-do
-  echo "Pointing ${DOTFILES_PATH}/${i} to ${HOME}/${i}"
-  ln -sf ${DOTFILES_PATH}/${i} ${HOME}/${i}
-done
-
-if [ ! -d ${HOME}/private ]; then
-  mkdir ${HOME}/private
-  echo "Created ${HOME}/private. If there is a .bashrc file in that directory, it will be sourced from ~/.bashrc."
+# VS Code settings
+VSCODE_DIR="$HOME/Library/Application Support/Code/User"
+if [[ -d "$VSCODE_DIR" ]]; then
+    target="$VSCODE_DIR/settings.json"
+    if [[ -e "$target" && ! -L "$target" ]]; then
+        echo "Backing up existing VS Code settings.json"
+        mv "$target" "$target.bak"
+    fi
+    ln -sf "$DOTFILES/vscode/settings.json" "$target"
+    echo "Linked VS Code settings.json"
 fi
 
-echo "Installed dotfiles. Restart shell to see changes."
-echo "Note: A private file ~/private/.bashrc will be automatically sourced at startup if it exists."
+# Claude Code settings
+CLAUDE_DIR="$HOME/.claude"
+mkdir -p "$CLAUDE_DIR"
+target="$CLAUDE_DIR/CLAUDE.md"
+if [[ -e "$target" && ! -L "$target" ]]; then
+    echo "Backing up existing CLAUDE.md"
+    mv "$target" "$target.bak"
+fi
+ln -sf "$DOTFILES/claude/CLAUDE.md" "$target"
+echo "Linked CLAUDE.md"
+
+echo "Done!"

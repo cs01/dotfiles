@@ -1,39 +1,74 @@
-[color]
-    diff = auto
-    branch = auto
-    status = auto
+[user]
+    name = cs01
+    email = cs01@users.noreply.github.com
 
-[diff]
-    tool = $HOME/dotfiles/.git-diff.sh
-    guitool = $HOME/dotfiles/.git-diff.sh
-    external = $HOME/dotfiles/.git-diff.sh
-
-[merge]
-    tool = mymeld
-
-[mergetool "mymeld"]
-    cmd = $HOME/dotfiles/.git-merge.sh $BASE $LOCAL $REMOTE $MERGED
-
-[push]
-    default = matching
-
-[alias]
-    co = checkout
-    sf = submodule foreach
-    # what branch am I on? (mainly used for sbranch)
-    cbranch = !"echo '\\033[32m\t\\c' ; git branch |  sed '/^[^*"Entering"]/d' ; echo '\\033[0m\\c'"
-    #what are the branches for all the submodules?
-    sbranch = !"echo '\nSuperProject branch: '; git cbranch;  git sf 'git cbranch'"
+[init]
+    defaultBranch = main
 
 [core]
-    excludesfile = $HOME/dotfiles/.gitignore_global
-    editor = 'subl -n -w' --wait
+    editor = vim
+    excludesfile = ~/.gitignore_global
 
-[include]
-		# Put your user info in a file not tracked, if desired
-		# i.e.
-		#[user]
-  	#		email = you@gmail.com
-  	#		name = First Last
-    path = ~/dotfiles/.gitconfig_notrack
+[push]
+    default = current
+    autoSetupRemote = true
 
+[pull]
+    rebase = true
+
+[fetch]
+    prune = true
+
+[diff]
+    colorMoved = default
+
+[merge]
+    conflictstyle = diff3
+
+[rerere]
+    enabled = true
+
+[alias]
+    # Status & info
+    s = status -sb
+    ss = status
+
+    # Branching
+    co = checkout
+    cb = checkout -b
+    b = branch
+    bd = branch -d
+    bD = branch -D
+
+    # Commits
+    c = commit
+    cm = commit -m
+    ca = commit --amend
+    can = commit --amend --no-edit
+
+    # Diffs
+    d = diff
+    ds = diff --staged
+
+    # Logging
+    l = log --oneline -20
+    lg = log --oneline --graph --all -30
+    ll = log --pretty=format:'%C(yellow)%h%Creset %s %C(green)(%cr)%Creset %C(blue)<%an>%Creset' -20
+
+    # Push/Pull
+    p = push
+    pf = push --force-with-lease
+    pu = pull
+
+    # Stash
+    st = stash
+    stp = stash pop
+    stl = stash list
+
+    # Reset
+    unstage = reset HEAD --
+    undo = reset --soft HEAD~1
+
+    # Misc
+    aliases = config --get-regexp alias
+    whoami = config user.email

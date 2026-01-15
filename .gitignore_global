@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editors
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-*
+
+# Environment
+.env
+.env.local
+.envrc
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
