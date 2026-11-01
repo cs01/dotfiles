@@ -7,7 +7,7 @@
 * I act as orchestrator: architecture, root-cause debugging, perf analysis, whole-repo judgment, and final review stay with me. Subagents own bounded execution of my design.
 * Give them detailed instructions: exact file paths, exact signatures/APIs to use, the invariants, what "done" looks like, and how to verify.
 * Always check their work before accepting it — read the diff, run the test. I own correctness.
-* One subagent at a time. No parallel fan-out — delegate serially, check the result, then decide whether another is warranted. Any file-writing agent gets its own worktree.
+* At most two subagents at a time, on independent tracks (no overlapping files). No wider fan-out; check each result before deciding whether another is warranted. Any file-writing agent gets its own worktree.
 
 # agent workflow (all repos)
 * Non-trivial task → work the loop in `~/.claude/AGENT_WORKFLOW.md` (research → plan → implement → run → review → wrap-up), or invoke the `workflow` skill. A repo's own AGENTS.md/CLAUDE.md wins where they conflict.
